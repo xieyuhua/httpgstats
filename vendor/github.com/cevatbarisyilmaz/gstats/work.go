@@ -10,8 +10,8 @@ import (
 
 func (g *GStats) work() {
 	for {
-		utcNow := time.Now().UTC()
-		nextHour := time.Date(utcNow.Year(), utcNow.Month(), utcNow.Day(), utcNow.Hour(), 0, 0, 0, time.UTC).Add(time.Hour)
+		utcNow := time.Now()
+		nextHour := time.Date(utcNow.Year(), utcNow.Month(), utcNow.Day(), utcNow.Hour(), 0, 0, 0, time.Local).Add(time.Hour)
 		time.Sleep(nextHour.Sub(utcNow))
 		g.record(utcNow, nextHour)
 	}
@@ -68,7 +68,7 @@ func (g *GStats) recordDay(t time.Time) {
 func (g *GStats) collectMonthlyRecord(t time.Time) *data {
 	data := newData()
 	for i := 1; i < 32; i++ {
-		data.merge(g.collectDailyRecord(time.Date(t.Year(), t.Month(), i, 0, 0, 0, 0, time.UTC)))
+		data.merge(g.collectDailyRecord(time.Date(t.Year(), t.Month(), i, 0, 0, 0, 0, time.Local)))
 	}
 	return data
 }
@@ -80,7 +80,7 @@ func (g *GStats) recordMonth(t time.Time) {
 func (g *GStats) collectYearlyRecord(t time.Time) *data {
 	data := newData()
 	for i := 1; i < 13; i++ {
-		data.merge(g.collectMonthlyRecord(time.Date(t.Year(), time.Month(i), 1, 0, 0, 0, 0, time.UTC)))
+		data.merge(g.collectMonthlyRecord(time.Date(t.Year(), time.Month(i), 1, 0, 0, 0, 0, time.Local)))
 	}
 	return data
 }

@@ -84,7 +84,7 @@ func getShowHandler(g *GStats) http.Handler {
 }
 
 func (g *GStats) getTodaysHighlights() *highlightedData {
-	record := g.collectDailyRecord(time.Now().UTC())
+	record := g.collectDailyRecord(time.Now())
 	g.dataMu.RLock()
 	record.merge(g.data)
 	g.dataMu.RUnlock()
@@ -92,10 +92,10 @@ func (g *GStats) getTodaysHighlights() *highlightedData {
 }
 
 func (g *GStats) getTodaysHourlyHighlights() []*highlightedData {
-	now := time.Now().UTC()
+	now := time.Now()
 	var hourlyHighlights []*highlightedData
 	for i := 0; i < now.Hour(); i++ {
-		highlights, err := g.lookupHourlyRecord(time.Date(now.Year(), now.Month(), now.Day(), i, 0, 0, 0, time.UTC))
+		highlights, err := g.lookupHourlyRecord(time.Date(now.Year(), now.Month(), now.Day(), i, 0, 0, 0, time.Local))
 		if err != nil {
 			hourlyHighlights = append(hourlyHighlights, newData().toHighlightedData())
 		} else {
@@ -109,8 +109,8 @@ func (g *GStats) getTodaysHourlyHighlights() []*highlightedData {
 }
 
 func (g *GStats) getYesterdaysHighlights() *highlightedData {
-	now := time.Now().UTC()
-	yesterday := time.Date(now.Year(), now.Month(), now.Day(), 1, 0, 0, 0, time.UTC).Add(-24 * time.Hour)
+	now := time.Now()
+	yesterday := time.Date(now.Year(), now.Month(), now.Day(), 1, 0, 0, 0, time.Local).Add(-24 * time.Hour)
 	d, err := g.lookupDailyRecord(yesterday)
 	if err != nil {
 		d = newData().toHighlightedData()
@@ -119,11 +119,11 @@ func (g *GStats) getYesterdaysHighlights() *highlightedData {
 }
 
 func (g *GStats) getYesterdaysHourlyHighlights() []*highlightedData {
-	now := time.Now().UTC()
-	yesterday := time.Date(now.Year(), now.Month(), now.Day(), 1, 0, 0, 0, time.UTC).Add(-24 * time.Hour)
+	now := time.Now()
+	yesterday := time.Date(now.Year(), now.Month(), now.Day(), 1, 0, 0, 0, time.Local).Add(-24 * time.Hour)
 	var hourlyHighlights []*highlightedData
 	for i := 0; i < 24; i++ {
-		highlights, err := g.lookupHourlyRecord(time.Date(yesterday.Year(), yesterday.Month(), yesterday.Day(), i, 0, 0, 0, time.UTC))
+		highlights, err := g.lookupHourlyRecord(time.Date(yesterday.Year(), yesterday.Month(), yesterday.Day(), i, 0, 0, 0, time.Local))
 		if err != nil {
 			hourlyHighlights = append(hourlyHighlights, newData().toHighlightedData())
 		} else {
@@ -134,7 +134,7 @@ func (g *GStats) getYesterdaysHourlyHighlights() []*highlightedData {
 }
 
 func (g *GStats) getThisMonthsHighlights() *highlightedData {
-	record := g.collectMonthlyRecord(time.Now().UTC())
+	record := g.collectMonthlyRecord(time.Now())
 	g.dataMu.RLock()
 	record.merge(g.data)
 	g.dataMu.RUnlock()
@@ -142,10 +142,10 @@ func (g *GStats) getThisMonthsHighlights() *highlightedData {
 }
 
 func (g *GStats) getThisMonthsDailyHighlights() []*highlightedData {
-	now := time.Now().UTC()
+	now := time.Now()
 	var dailyHighlights []*highlightedData
 	for i := 1; i < now.Day(); i++ {
-		highlights, err := g.lookupDailyRecord(time.Date(now.Year(), now.Month(), i, 0, 0, 0, 0, time.UTC))
+		highlights, err := g.lookupDailyRecord(time.Date(now.Year(), now.Month(), i, 0, 0, 0, 0, time.Local))
 		if err != nil {
 			dailyHighlights = append(dailyHighlights, newData().toHighlightedData())
 		} else {
@@ -161,8 +161,8 @@ func (g *GStats) getThisMonthsDailyHighlights() []*highlightedData {
 }
 
 func (g *GStats) getLastMonthsHighlights() *highlightedData {
-	now := time.Now().UTC()
-	lastMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.UTC).Add(-24 * time.Hour)
+	now := time.Now()
+	lastMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.Local).Add(-24 * time.Hour)
 	d, err := g.lookupMonthlyRecord(lastMonth)
 	if err != nil {
 		d = newData().toHighlightedData()
@@ -171,9 +171,9 @@ func (g *GStats) getLastMonthsHighlights() *highlightedData {
 }
 
 func (g *GStats) getLastMonthsDailyHighlights() []*highlightedData {
-	now := time.Now().UTC()
-	lastMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.UTC).Add(-24 * time.Hour)
-	lastMonth = time.Date(lastMonth.Year(), lastMonth.Month(), 1, 1, 0, 0, 0, time.UTC)
+	now := time.Now()
+	lastMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.Local).Add(-24 * time.Hour)
+	lastMonth = time.Date(lastMonth.Year(), lastMonth.Month(), 1, 1, 0, 0, 0, time.Local)
 	month := lastMonth.Month()
 	var dailyHighlights []*highlightedData
 	for lastMonth.Month() == month {
@@ -190,7 +190,7 @@ func (g *GStats) getLastMonthsDailyHighlights() []*highlightedData {
 }
 
 func (g *GStats) getThisYearsHighlights() *highlightedData {
-	record := g.collectYearlyRecord(time.Now().UTC())
+	record := g.collectYearlyRecord(time.Now())
 	g.dataMu.RLock()
 	record.merge(g.data)
 	g.dataMu.RUnlock()
@@ -198,10 +198,10 @@ func (g *GStats) getThisYearsHighlights() *highlightedData {
 }
 
 func (g *GStats) getThisYearsMonthlyHighlights() []*highlightedData {
-	now := time.Now().UTC()
+	now := time.Now()
 	var monthlyHighlights []*highlightedData
 	for i := time.Month(1); i < now.Month(); i++ {
-		highlights, err := g.lookupMonthlyRecord(time.Date(now.Year(), i, 1, 0, 0, 0, 0, time.UTC))
+		highlights, err := g.lookupMonthlyRecord(time.Date(now.Year(), i, 1, 0, 0, 0, 0, time.Local))
 		if err != nil {
 			monthlyHighlights = append(monthlyHighlights, newData().toHighlightedData())
 		} else {
@@ -217,8 +217,8 @@ func (g *GStats) getThisYearsMonthlyHighlights() []*highlightedData {
 }
 
 func (g *GStats) getLastYearsHighlights() *highlightedData {
-	now := time.Now().UTC()
-	lastYear := time.Date(now.Year()-1, 1, 1, 0, 0, 0, 0, time.UTC)
+	now := time.Now()
+	lastYear := time.Date(now.Year()-1, 1, 1, 0, 0, 0, 0, time.Local)
 	d, err := g.lookupYearlyRecord(lastYear)
 	if err != nil {
 		d = newData().toHighlightedData()
@@ -227,8 +227,8 @@ func (g *GStats) getLastYearsHighlights() *highlightedData {
 }
 
 func (g *GStats) getLastYearsMonthlyHighlights() []*highlightedData {
-	now := time.Now().UTC()
-	lastYear := time.Date(now.Year()-1, 1, 1, 1, 0, 0, 0, time.UTC)
+	now := time.Now()
+	lastYear := time.Date(now.Year()-1, 1, 1, 1, 0, 0, 0, time.Local)
 	year := lastYear.Year()
 	var monthlyHighlights []*highlightedData
 	for lastYear.Year() == year {

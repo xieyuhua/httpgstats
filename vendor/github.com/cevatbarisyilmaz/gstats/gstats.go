@@ -93,7 +93,7 @@ func (g *GStats) Show() http.Handler {
 // PrepareToExit saves any unsaved data to disk to not lose them on exiting the program.
 // Normally, GStats does disk saves at the beginning of each hour.
 func (g *GStats) PrepareToExit() {
-	now := time.Now().UTC()
+	now := time.Now()
 	basePath := g.root + strconv.Itoa(now.Year()) + "/" + strconv.Itoa(int(now.Month())) + "/" + strconv.Itoa(now.Day()) + "/" + strconv.Itoa(now.Hour())
 	err := os.MkdirAll(basePath, os.ModeDir)
 	if err != nil {
@@ -258,7 +258,7 @@ func (g *GStats) getReferrerRecord(key string) (record *commonRecord) {
 }
 
 func (g *GStats) restoreHourlyRecord() *data {
-	now := time.Now().UTC()
+	now := time.Now()
 	path := g.root + strconv.Itoa(now.Year()) + "/" + strconv.Itoa(int(now.Month())) + "/" + strconv.Itoa(now.Day()) + "/" + strconv.Itoa(now.Hour()) + "/data.json"
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
