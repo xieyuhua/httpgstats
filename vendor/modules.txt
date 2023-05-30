@@ -1,0 +1,14 @@
+# github.com/alash3al/go-fastcgi-client v0.0.0-20180428223153-4bfaa51d4a5f
+github.com/alash3al/go-fastcgi-client
+# github.com/cevatbarisyilmaz/gstats v0.1.5
+github.com/cevatbarisyilmaz/gstats
+github.com/cevatbarisyilmaz/gstats/internal/files
+# github.com/cevatbarisyilmaz/ip2country v0.2.0
+github.com/cevatbarisyilmaz/ip2country
+# github.com/mssola/user_agent v0.5.0
+github.com/mssola/user_agent
+# github.com/oschwald/maxminddb-golang v1.5.0
+github.com/oschwald/maxminddb-golang
+# golang.org/x/sys v0.0.0-20191105231009-c1f44814a5cd
+golang.org/x/sys/unix
+golang.org/x/sys/windows
